@@ -2,8 +2,6 @@ let AppSwitcher = null;
 
 (function () {
     let appSwitcherTemplate = document.createElement("template");
-    console.log("bhjhvjvg");
-    
     appSwitcherTemplate.innerHTML = `
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
     <style>

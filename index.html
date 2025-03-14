@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Switcher Component Demo</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script type="module" src="./components/app-drawer.js"></script>
+    <script type="module" src="./components/app-drawer-v2.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -30,8 +30,6 @@
             font-size: 18px;
             font-weight: 600;
         }
-
-        
     </style>
 </head>
 
@@ -39,12 +37,12 @@
     <div class="demo-container">
         <header>
             <!-- Default App Switcher -->
-            <app-switcher activeAppId="dashboard" headerTitle="Applications" appData='[
+            <sidebar-app-switcher activeAppId="dashboard" headerTitle="Applications" appData='[
                     {
                         "id": "dashboard",
                         "name": "Dashboard",
                         "url": "/dashboard",
-                        "iconClass": "ri-dashboard-fill",
+                        "iconClass": "../components/icons/grid-icon.svg",
                         "iconBgColor": "#4F46E5"
                     },
                     {
@@ -83,11 +81,11 @@
                         "iconBgColor": "#0EA5E9"
                     }
                 ]'>
-            </app-switcher>
+            </sidebar-app-switcher>
             <div class="logo">App Switcher Demo</div>
         </header>
 
-       
+
     </div>
 </body>
 
