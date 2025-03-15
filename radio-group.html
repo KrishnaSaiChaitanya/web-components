@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,7 +18,6 @@
         .title {
             font-size: 30px;
             font-weight: bold;
-
         }
 
         .main-container {
@@ -29,7 +29,8 @@
             top: 10%;
         }
 
-        .component-container {
+        .component-container,
+        .new-component-container {
             display: flex;
             justify-content: center;
             flex-direction: column;
@@ -37,72 +38,32 @@
             border: 1px solid lightgray;
         }
 
-        legend {
-            position: relative;
-            padding: 24px 0 16px;
+        .hidden {
+            display: none;
         }
 
-        h2 {
-            margin-top: 0;
-        }
-
-        .display-x-small {
-            font-family: "Tiempos Headline", sans-serif;
-            text-decoration: none;
-            font-style: normal;
-            font-weight: normal;
-            font-stretch: normal;
-            letter-spacing: 0;
-            font-size: 1.5rem;
-            line-height: 1.875rem;
-        }
-
-        .field-container {
-            display: flex;
-            flex-direction: column;
-            margin: 5px 0;
-        }
-
-        .field-container input {
-            margin-bottom: 10px;
-            width: 50%;
-            height: 50px;
-        }
-
-        .field-container button {
-            width: 80px;
-            height: 50px;
+        .theme-selector {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
     <script>
-        window.addEventListener('load', function () {
-            const form = document.getElementById("formId");
-            form.addEventListener("submit", function (e) {
-                formSubmit(e);
-            });
-        })
+        function toggleTheme() {
+            const selectedTheme = document.getElementById("themeSelector").value;
+            const componentContainer = document.querySelector(".component-container");
+            const newComponentContainer = document.querySelector(".new-component-container");
 
-        function handleRadioChange(e) {
-            console.log("radio state is ", e.target.value);
-        }
-        function formSubmit(e) {
-            const firstName = e.target.firstName.value;
-            const lastName = e.target.lastName.value;
-            let age = document.getElementById('age')?.shadowRoot?.querySelector('input[type="radio"]:checked')?.value;
-            let css = document.getElementById('css')?.shadowRoot?.querySelector('input[type="radio"]:checked')?.value;
-            let js = document.getElementById('javascript')?.shadowRoot?.querySelector('input[type="radio"]:checked')?.value;
-            let data = {
-                firstName,
-                lastName,
-                age
+            if (selectedTheme === "theme1") {
+                componentContainer.classList.remove("hidden");
+                newComponentContainer.classList.add("hidden");
+            } else {
+                componentContainer.classList.add("hidden");
+                newComponentContainer.classList.remove("hidden");
             }
-            if (css) {
-                data = { ...data, css }
-            }
-            if (js) {
-                data = { ...data, js }
-            }
-            console.log('form data = ', data)
         }
     </script>
 </head>
@@ -111,88 +72,78 @@
     <script type="module" src="components/radio-group.js"></script>
     <div class="main-container">
         <p class="title">Radio Button Component</p>
+        <select id="themeSelector" class="theme-selector" onchange="toggleTheme()">
+            <option value="theme1">Theme 1</option>
+            <option value="theme2">Theme 2</option>
+        </select>
         <br />
-        <div class="component-container">
+    <div class="component-container">
+    
+        <fieldset>
+            <legend></legend>
+            <h2 class="heading display-x-small">Radio Button</h2>
+            <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
+                radioData="[{label: 'Default', value: 'default'},{label: 'Selected', value: 'selected', checked: true}]">
+            </agno-radio-button-group>
+            <agno-radio-button-group groupName="radio_disabled_group" groupDisabled="true" direction="column"
+                handler="handleRadioChange"
+                radioData="[{label: 'Disabled', value: 'disabled'},{label: 'Disabled Selected', value: 'disabled selected', checked: true, disabled: true}]">
+            </agno-radio-button-group>
+        </fieldset>
+    
+        <fieldset>
+            <legend></legend>
+            <h2>Radio Button with Row direction</h2>
+            <agno-radio-button-group groupName="radio_group" direction="row" handler="handleRadioChange"
+                radioData="[{label: 'Test', value: 'test'},{label: 'Test-1', value: 'test1', checked: true}, {label: 'Test-2', value: 'test2', disabled: true}, {label: 'Test-3', value: 'test3', checked: true, disabled: true}]">
+            </agno-radio-button-group>
+        </fieldset>
+    
+        <fieldset>
+            <legend></legend>
+            <h2>Radio button group - required with a title</h2>
+            <agno-radio-button-group groupName="required_group" required="true" handler="handleRadioChange"
+                requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
+                radioData="[{label: 'Default', value: 'default'}, {label: 'Selected', value: 'selected', checked:true}]">
+            </agno-radio-button-group>
+        </fieldset>
+    
+        <fieldset>
+            <legend></legend>
+            <h2>Radio button group - required with a title - error state</h2>
+            <agno-radio-button-group groupName="error_group" required="true" handler="handleRadioChange"
+                requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
+                error="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et tortor consectrtur."
+                radioData="[{label: 'orem ipsum ', value: 'default'}, {label: 'Selected', value: 'selected', checked:true}]">
+            </agno-radio-button-group>
+        </fieldset>
+    
+    
+    
+    
+    </div>
+
+
+        <div class="new-component-container hidden">
             <fieldset>
-                <legend></legend>
-                <form id="formId" action="" onsubmit="formSubmit">
-                    <div class="field-container">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" />
-                    </div>
-
-                    <div class="field-container">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" />
-                    </div>
-                    <div class="field-container">
-                        <label>Age</label>
-                        <agno-radio-button-group id="age" name="age" groupName="age" direction="column"
-                            radioData="[{label: '0 - 30', value: '30'},{label: '31 - 60', value: '60'},{label: '61 - 100', value: '100'}]">
-                        </agno-radio-button-group>
-                    </div>
-
-                    <div class="field-container">
-                        <label>Technology</label>
-                        <agno-radio-button-group id="css" name="css" groupName="css"
-                            radioData="[{label: 'Css', value: 'css'}]"></agno-radio-button-group>
-                        <agno-radio-button-group id="javascript" name="javascript" groupName="javascript"
-                            radioData="[{label: 'Javascript', value: 'javascript'}]"></agno-radio-button-group>
-                    </div>
-
-                    <div class="field-container">
-                        <button id="button" type="submit">Submit</button>
-                    </div>
-                </form>
+                <h2>Radio button group - with  Multi Line</h2>
+                <agno-radio-button-group groupName="radio_group" handler="handleRadioChange"
+                    radioData='[{"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?", "value": "default", "multiLine": true, theme:"theme2"}, {"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis","multiLine": true, "value": "selected", "checked": true,theme:"theme2"}, {"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis", "value": "selected", "checked": false, "multiLine": true, theme:"theme2"}]'>
+                </agno-radio-button-group>
             </fieldset>
             <fieldset>
-                <legend></legend>
                 <h2 class="heading display-x-small">Radio Button</h2>
                 <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
-                    radioData="[{label: 'Default', value: 'default'},{label: 'Selected', value: 'selected', checked: true}]">
-                </agno-radio-button-group>
-                <agno-radio-button-group groupName="radio_disabled_group" groupDisabled="true" direction="column"
-                    handler="handleRadioChange"
-                    radioData="[{label: 'Disabled', value: 'disabled'},{label: 'Disabled Selected', value: 'disabled selected', checked: true, disabled: true}]">
+                    radioData="[{label: 'Default', value: 'default', theme: 'theme2'},{label: 'Selected', value: 'selected', checked: true, theme: 'theme2'}]">
                 </agno-radio-button-group>
             </fieldset>
 
             <fieldset>
-                <legend></legend>
-                <h2>Radio Button with Row direction</h2>
-                <agno-radio-button-group groupName="radio_group" direction="row" handler="handleRadioChange"
-                    radioData="[{label: 'Test', value: 'test'},{label: 'Test-1', value: 'test1', checked: true}, {label: 'Test-2', value: 'test2', disabled: true}, {label: 'Test-3', value: 'test3', checked: true, disabled: true}]">
+                <h2 class="heading display-x-small">Radio Button with Hover</h2>
+                <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
+                    radioData="[{label: 'Default', value: 'default', theme: 'theme2', hover: true},{label: 'Selected', value: 'selected', checked: true, theme: 'theme2',hover: true}]">
                 </agno-radio-button-group>
             </fieldset>
-
-            <fieldset>
-                <legend></legend>
-                <h2>Radio button group - required with a title</h2>
-                <agno-radio-button-group groupName="required_group" required="true" handler="handleRadioChange"
-                    requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
-                    radioData="[{label: 'Default', value: 'default'}, {label: 'Selected', value: 'selected', checked:true}]">
-                </agno-radio-button-group>
-            </fieldset>
-
-            <fieldset>
-                <legend></legend>
-                <h2>Radio button group - required with a title - error state</h2>
-                <agno-radio-button-group groupName="error_group" required="true" handler="handleRadioChange"
-                    requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
-                    error="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et tortor consectrtur."
-                    radioData="[{label: 'orem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?orem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?', value: 'default'}, {label: 'Selected', value: 'selected', checked:true}]">
-                </agno-radio-button-group>
-            </fieldset>
-
-            <fieldset>
-                
-                <h2>Radio button group - with Hover & Multi Line</h2>
-                <agno-radio-button-group groupName="radio_group" handler="handleRadioChange"
-                    radioData='[{"label": "Multi-line Demo [Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue]", "value": "default", "multiLine": true}, {"label": "Selected demo", "value": "selected", "checked": true},{"label": "Hover demo", "value": "selected", "checked": false, hover: true}]'>
-                </agno-radio-button-group>
-            </fieldset>
-
-
         </div>
     </div>
 </body>

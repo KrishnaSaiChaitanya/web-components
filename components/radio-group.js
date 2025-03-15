@@ -73,8 +73,11 @@ let RadioButtonGroup = null;
       transition: all 250ms ease;
     }
     input[type="radio"]:checked + .radio__label:before {
-      background-color: var(--palette-feedback-info);
+      background-color: var(--palette-brand-charcoal);
       box-shadow: inset 0 0 0 4px var(--palette-brand-neutral);
+    }
+    input[type="radio"]:checked + .radio__label[data-theme="theme2"]:before {
+      background-color: var(--palette-feedback-info);
     }
     input[type="radio"]:focus + .radio__label:before {
       outline: none;
@@ -123,11 +126,13 @@ let RadioButtonGroup = null;
       white-space: normal;
       word-wrap: break-word;
     }
-    .btn__radio.hover:hover input[type="radio"] + .radio__label:before { background-color: var(--palette-feedback-error);
-    box-shadow: inset 0 0 0 4px var(--palette-brand-neutral);
-     }
-    .radio__label.multi-line:before { flex-shrink: 0; margin-top: 0.2em; }
-    
+    .btn__radio.hover:hover input[type="radio"] + .radio__label:before {
+     background-color: var(--palette-brand-charcoal);
+     box-shadow: inset 0 0 0 4px var(--palette-brand-neutral);
+    }
+    .radio__label.multi-line:before {
+     flex-shrink: 0;
+    }
   </style>
   <div id="radio__container">
     <div id="required" class="required hide" role="none">
@@ -234,12 +239,17 @@ let RadioButtonGroup = null;
       input.addEventListener('change', e => this.onCheckbox(e, id));
       return input;
     }
-    createLabelElement(id, labelId, text) {
+    createLabelElement(id, labelId, text, theme) {
       const label = document.createElement('label');
       label.setAttribute('for', id);
       label.setAttribute('class', 'radio__label');
       label.setAttribute('id', labelId);
       label.innerText = text;
+      if(theme === "theme2") {
+        label.setAttribute('data-theme', 'theme2');
+      } else if(theme === "theme1") {
+        label.setAttribute('data-theme', 'theme1');
+      }
       return label;
     }
     connectedCallback() {
@@ -256,7 +266,7 @@ let RadioButtonGroup = null;
         if (data) {
           data.forEach((item, index) => {
             const id = `${group}_${index}`;
-            const { label, value, disabled = false, checked = false, multiLine = false, hover = false } = item;
+            const { label, value, disabled = false, checked = false, multiLine = false, hover = false, theme } = item;
             const labelId = `label_${id}`;
             const inputProps = {
               id,
@@ -268,7 +278,7 @@ let RadioButtonGroup = null;
               error,
             };
             const inputElement = this.createInputElement(inputProps);
-            const labelElement = this.createLabelElement(id, labelId, label);
+            const labelElement = this.createLabelElement(id, labelId, label, theme);
             if(multiLine){
               labelElement.classList.add("multi-line");
             }
