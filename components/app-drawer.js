@@ -1,9 +1,9 @@
-let AppSwitcher = null;
+let SidebarAppSwitcher = null;
 
 (function () {
-    let appSwitcherTemplate = document.createElement("template");
-    appSwitcherTemplate.innerHTML = `
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+    let sidebarAppSwitcherTemplate = document.createElement("template");
+    sidebarAppSwitcherTemplate.innerHTML = `
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -12,12 +12,12 @@ let AppSwitcher = null;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
         
-        .app-switcher-container {
+        .sidebar-switcher-container {
             position: relative;
             display: inline-block;
         }
         
-        .app-switcher-button {
+        .sidebar-switcher-button {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -30,67 +30,94 @@ let AppSwitcher = null;
             transition: background-color 0.2s;
         }
         
-        .app-switcher-button:hover {
+        .sidebar-switcher-button:hover {
             background-color: rgba(0, 0, 0, 0.05);
         }
         
-        .app-switcher-button i {
+        .sidebar-switcher-button i {
             font-size: 24px;
             color: #333;
         }
         
-        .app-switcher-panel {
-            position: absolute;
-            top: 48px;
+        .sidebar-panel {
+            position: fixed;
+            top: 0;
             left: 0;
-            width: 340px;
+            height: 100vh;
+            width: 280px;
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease-in-out;
-            overflow: hidden;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         
-        .app-switcher-panel.open {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        .sidebar-panel.open {
+            transform: translateX(0);
         }
         
         .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 16px;
             border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            gap: 20px;
+            background-color: white;
+            z-index: 2;
         }
         
         .panel-header h3 {
             font-size: 16px;
             font-weight: 600;
             color: #333;
+            flex-grow: 1;
         }
         
-        .apps-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            padding: 16px;
-            max-height: 500px;
-            overflow-y: auto;
+        .close-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin-right: 20px
+            border-radius: 6px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .close-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .close-button i {
+            font-size: 20px;
+            color: #555;
+        }
+        
+        .apps-list {
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            flex-grow: 1;
         }
         
         .app-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 16px 8px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s;
             text-decoration: none;
+            margin-bottom: 4px;
         }
         
         .app-item:hover {
@@ -106,137 +133,162 @@ let AppSwitcher = null;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            margin-bottom: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            margin-right: 12px;
+            flex-shrink: 0;
         }
         
         .app-icon i {
-            font-size: 24px;
+            font-size: 18px;
             color: white;
         }
         
         .app-name {
-            font-size: 12px;
+            font-size: 14px;
             color: #333;
-            text-align: center;
             font-weight: 500;
         }
         
-        /* Responsive styles */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .grid-icon {
+            background-image: url('../icons/grid-icon.svg');
+            height: 32px;
+            width: 32px;
+        }
+        
+        /* Small screen adjustments */
         @media (max-width: 480px) {
-            .app-switcher-panel {
-                width: 280px;
-            }
-            
-            .apps-container {
-                grid-template-columns: repeat(2, 1fr);
+            .sidebar-panel {
+                width: 240px;
             }
         }
     </style>
     
-    <div class="app-switcher-container">
-        <button class="app-switcher-button" aria-label="Open app switcher">
-           <?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 32 32" height="32px" id="Layer_1" version="1.1" viewBox="0 0 32 32" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="grid-2"><path d="M10.246,4.228c0-0.547-0.443-0.991-0.99-0.991H3.914c-0.548,0-0.991,0.443-0.991,0.991V9.57   c0,0.546,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.444,0.99-0.99V4.228z" fill="#515151"/><path d="M19.453,4.228c0-0.547-0.443-0.991-0.991-0.991h-5.343c-0.546,0-0.99,0.443-0.99,0.991V9.57   c0,0.546,0.444,0.99,0.99,0.99h5.343c0.548,0,0.991-0.444,0.991-0.99V4.228z" fill="#515151"/><path d="M28.868,4.228c0-0.547-0.443-0.991-0.99-0.991h-5.342c-0.548,0-0.991,0.443-0.991,0.991V9.57   c0,0.546,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.444,0.99-0.99V4.228z" fill="#515151"/><path d="M10.246,13.224c0-0.547-0.443-0.99-0.99-0.99H3.914c-0.548,0-0.991,0.443-0.991,0.99v5.342   c0,0.549,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.441,0.99-0.99V13.224z" fill="#515151"/><path d="M19.453,13.224c0-0.547-0.443-0.99-0.991-0.99h-5.343c-0.546,0-0.99,0.443-0.99,0.99v5.342   c0,0.549,0.444,0.99,0.99,0.99h5.343c0.548,0,0.991-0.441,0.991-0.99V13.224z" fill="#515151"/><path d="M28.868,13.224c0-0.547-0.443-0.99-0.99-0.99h-5.342c-0.548,0-0.991,0.443-0.991,0.99v5.342   c0,0.549,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.441,0.99-0.99V13.224z" fill="#515151"/><path d="M10.246,22.43c0-0.545-0.443-0.99-0.99-0.99H3.914c-0.548,0-0.991,0.445-0.991,0.99v5.344   c0,0.547,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.443,0.99-0.99V22.43z" fill="#515151"/><path d="M19.453,22.43c0-0.545-0.443-0.99-0.991-0.99h-5.343c-0.546,0-0.99,0.445-0.99,0.99v5.344   c0,0.547,0.444,0.99,0.99,0.99h5.343c0.548,0,0.991-0.443,0.991-0.99V22.43z" fill="#515151"/><path d="M28.868,22.43c0-0.545-0.443-0.99-0.99-0.99h-5.342c-0.548,0-0.991,0.445-0.991,0.99v5.344   c0,0.547,0.443,0.99,0.991,0.99h5.342c0.547,0,0.99-0.443,0.99-0.99V22.43z" fill="#515151"/></g></svg>
+    <div class="sidebar-switcher-container">
+        <button class="sidebar-switcher-button" aria-label="Open app sidebar">
+          <span class="grid-icon"></span>
         </button>
-        <div class="app-switcher-panel" role="dialog" aria-labelledby="app-switcher-title">
+        <div class="backdrop"></div>
+        <div class="sidebar-panel" role="dialog" aria-labelledby="sidebar-title">
             <div class="panel-header">
-                <h3 id="app-switcher-title">Applications</h3>
+               
+                <button class="close-button" aria-label="Close sidebar">
+                   <span class="grid-icon"></span>
+                </button>
+                 <h3 id="sidebar-title">Applications</h3>
             </div>
-            <div class="apps-container"></div>
+            <div class="apps-list"></div>
         </div>
     </div>
     `;
     
-    class AppSwitcher extends HTMLElement {
+    class SidebarAppSwitcher extends HTMLElement {
         constructor() {
             super();
             this.attachShadow({ mode: "open" });
-            this.shadowRoot.appendChild(appSwitcherTemplate.content.cloneNode(true));
-            
-            // Parse app data from attribute or use default empty object
-            this.appData = JSON.parse(this.getAttribute('appData') || '[]');
+            this.shadowRoot.appendChild(sidebarAppSwitcherTemplate.content.cloneNode(true));
+        
+            this.appData = JSON.parse(this.getAttribute("appData") || "[]");
             this.activeAppId = this.getAttribute('activeAppId') || null;
             this.headerTitle = this.getAttribute('headerTitle') || 'Applications';
             
-            // Elements
-            this.button = this.shadowRoot.querySelector('.app-switcher-button');
-            this.panel = this.shadowRoot.querySelector('.app-switcher-panel');
-            this.appsContainer = this.shadowRoot.querySelector('.apps-container');
-            this.panelHeader = this.shadowRoot.querySelector('#app-switcher-title');
             
-            // Bind methods
-            this.togglePanel = this.togglePanel.bind(this);
+            this.button = this.shadowRoot.querySelector('.sidebar-switcher-button');
+            this.panel = this.shadowRoot.querySelector('.sidebar-panel');
+            this.backdrop = this.shadowRoot.querySelector('.backdrop');
+            this.closeButton = this.shadowRoot.querySelector('.close-button');
+            this.appsList = this.shadowRoot.querySelector('.apps-list');
+            this.panelHeader = this.shadowRoot.querySelector('#sidebar-title');
+            
+           
+            this.openPanel = this.openPanel.bind(this);
             this.closePanel = this.closePanel.bind(this);
             this.handleKeyDown = this.handleKeyDown.bind(this);
-            this.handleClickOutside = this.handleClickOutside.bind(this);
+            this.handleBackdropClick = this.handleBackdropClick.bind(this);
             
-            // Focus trap elements
+            
             this.focusableElements = [];
         }
         
         connectedCallback() {
-            // Set header title
+            
             this.panelHeader.textContent = this.headerTitle;
             
-            // Render apps
+            
             this.renderApps();
             
-            // Add event listeners
-            this.button.addEventListener('click', this.togglePanel);
+            
+            this.button.addEventListener('click', this.openPanel);
+            this.closeButton.addEventListener('click', this.closePanel);
+            this.backdrop.addEventListener('click', this.handleBackdropClick);
             document.addEventListener('keydown', this.handleKeyDown);
-            document.addEventListener('click', this.handleClickOutside);
+            
+            
+            this.panel.addEventListener('touchmove', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
         }
         
         disconnectedCallback() {
-            // Clean up event listeners
-            this.button.removeEventListener('click', this.togglePanel);
+            
+            this.button.removeEventListener('click', this.openPanel);
+            this.closeButton.removeEventListener('click', this.closePanel);
+            this.backdrop.removeEventListener('click', this.handleBackdropClick);
             document.removeEventListener('keydown', this.handleKeyDown);
-            document.removeEventListener('click', this.handleClickOutside);
-        }
-        
-        togglePanel() {
-            if (this.panel.classList.contains('open')) {
-                this.closePanel();
-            } else {
-                this.openPanel();
-            }
         }
         
         openPanel() {
             this.panel.classList.add('open');
-            // Update focusable elements
+            this.backdrop.classList.add('open');
+            
+            
+            document.body.style.overflow = 'hidden';
             this.updateFocusableElements();
-            // Set focus to first element
+            
+            
             if (this.focusableElements.length > 0) {
                 this.focusableElements[0].focus();
             }
             
-            // Dispatch custom event
             this.dispatchEvent(new CustomEvent('panelOpened'));
         }
         
         closePanel() {
             this.panel.classList.remove('open');
-            // Return focus to button
+            this.backdrop.classList.remove('open');
+            document.body.style.overflow = '';
             this.button.focus();
-            
-            // Dispatch custom event
             this.dispatchEvent(new CustomEvent('panelClosed'));
         }
         
         handleKeyDown(event) {
             if (!this.panel.classList.contains('open')) return;
             
-            // Close on Escape
             if (event.key === 'Escape') {
                 event.preventDefault();
                 this.closePanel();
                 return;
             }
             
-            // Handle tab key for focus trap
             if (event.key === 'Tab') {
                 if (this.focusableElements.length === 0) return;
                 
@@ -253,23 +305,18 @@ let AppSwitcher = null;
             }
         }
         
-        handleClickOutside(event) {
-            const isClickInside = this.contains(event.target) || this.shadowRoot.contains(event.target);
-            
-            if (this.panel.classList.contains('open') && !isClickInside) {
-                this.closePanel();
-            }
+        handleBackdropClick() {
+            this.closePanel();
         }
         
         updateFocusableElements() {
-            // Get all focusable elements inside the panel
             this.focusableElements = Array.from(
                 this.shadowRoot.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
             ).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
         }
         
         renderApps() {
-            this.appsContainer.innerHTML = '';
+            this.appsList.innerHTML = '';
             
             this.appData.forEach(app => {
                 const appElement = document.createElement('a');
@@ -277,27 +324,23 @@ let AppSwitcher = null;
                 appElement.className = 'app-item';
                 appElement.setAttribute('tabindex', '0');
                 
-                // Mark as active if it matches the active app ID
                 if (app.id === this.activeAppId) {
                     appElement.classList.add('active');
                     appElement.setAttribute('aria-current', 'page');
-                    
-                    // Prevent navigation for active app
                     appElement.addEventListener('click', (e) => {
                         e.preventDefault();
                     });
                 }
                 
-                // Create icon element
                 const iconElement = document.createElement('div');
                 iconElement.className = 'app-icon';
-                iconElement.style.backgroundColor = app.iconBgColor || '#6366F1';
+                iconElement.style.backgroundColor = app?.iconBgColor || 'white';
                 
-                const iconInner = document.createElement('i');
-                iconInner.className = app.iconClass;
+                const iconInner = document.createElement('img');
+                iconInner.src = app.iconClass;
+                iconInner.style.width = '32px';
+                iconInner.style.height = '32px';
                 iconElement.appendChild(iconInner);
-                
-                // Create app name element
                 const nameElement = document.createElement('span');
                 nameElement.className = 'app-name';
                 nameElement.textContent = app.name;
@@ -306,18 +349,17 @@ let AppSwitcher = null;
                 appElement.appendChild(iconElement);
                 appElement.appendChild(nameElement);
                 
-                // Add click event if not active
+                
                 if (app.id !== this.activeAppId) {
                     appElement.addEventListener('click', (e) => {
-                        // Navigate to the app URL
-                        // For demo purposes, we'll just console log and close panel
+                       
                         if (app.url && app.url !== '#') {
                             window.location.href = app.url;
                         }
                         
                         this.closePanel();
                         
-                        // Dispatch custom event with selected app
+                        
                         this.dispatchEvent(new CustomEvent('appSelected', {
                             detail: {
                                 appId: app.id,
@@ -328,11 +370,10 @@ let AppSwitcher = null;
                     });
                 }
                 
-                this.appsContainer.appendChild(appElement);
+                this.appsList.appendChild(appElement);
             });
         }
         
-        // Allow dynamic updating of app data
         static get observedAttributes() {
             return ['appdata', 'activeappid', 'headertitle'];
         }
@@ -359,9 +400,12 @@ let AppSwitcher = null;
         }
     }
     
-    customElements.define('app-switcher', AppSwitcher);
-    AppSwitcher = AppSwitcher;
+    // customElements.define("sidebar-app-switcher", SidebarAppSwitcher);
+    if (!customElements.get("sidebar-app-switcher")) {
+  customElements.define("sidebar-app-switcher", SidebarAppSwitcher);
+}
+    SidebarAppSwitcher = SidebarAppSwitcher;
     
 })();
 
-export { AppSwitcher };
+export { SidebarAppSwitcher };

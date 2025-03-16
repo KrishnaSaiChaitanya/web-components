@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Switcher Component Demo</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script type="module" src="./components/app-drawer-v2.js"></script>
+    <script type="module" src="./components/app-drawer.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -35,56 +35,107 @@
 
 <body>
     <div class="demo-container">
+
         <header>
             <!-- Default App Switcher -->
-            <sidebar-app-switcher activeAppId="dashboard" headerTitle="Applications" appData='[
-                    {
-                        "id": "dashboard",
-                        "name": "Dashboard",
-                        "url": "/dashboard",
-                        "iconClass": "../components/icons/grid-icon.svg",
-                        "iconBgColor": "#4F46E5"
-                    },
-                    {
-                        "id": "analytics",
-                        "name": "Analytics",
-                        "url": "/analytics",
-                        "iconClass": "ri-line-chart-fill",
-                        "iconBgColor": "#10B981"
-                    },
-                    {
-                        "id": "projects",
-                        "name": "Projects",
-                        "url": "/projects",
-                        "iconClass": "ri-folder-fill",
-                        "iconBgColor": "#F59E0B"
-                    },
-                    {
-                        "id": "messages",
-                        "name": "Messages",
-                        "url": "/messages",
-                        "iconClass": "ri-message-3-fill",
-                        "iconBgColor": "#EC4899"
-                    },
-                    {
-                        "id": "calendar",
-                        "name": "Calendar",
-                        "url": "/calendar",
-                        "iconClass": "ri-calendar-fill",
-                        "iconBgColor": "#6366F1"
-                    },
-                    {
-                        "id": "documents",
-                        "name": "Documents",
-                        "url": "/documents",
-                        "iconClass": "ri-file-text-fill",
-                        "iconBgColor": "#0EA5E9"
-                    }
-                ]'>
+            <sidebar-app-switcher headerTitle="Applications" appData='[
+                        {
+                            "id": "dashboard",
+                            "name": "Dashboard",
+                            "url": "/dashboard",
+                            "iconClass": "../icons/facebook.svg"
+                        },
+                        {
+                            "id": "analytics",
+                            "name": "Analytics",
+                            "url": "/analytics",
+                            "iconClass": "../icons/apple.svg"
+                        },
+                        {
+                            "id": "projects",
+                            "name": "Projects",
+                            "url": "/projects",
+                            "iconClass": "../icons/google.svg"
+                        }
+                        
+                    ]'>
             </sidebar-app-switcher>
             <div class="logo">App Switcher Demo</div>
         </header>
 
+        <header>
+            <!-- App Switcher -->
+            <sidebar-app-switcher headerTitle="Applications" appData='[
+                            {
+                                "id": "dashboard",
+                                "name": "Dashboard",
+                                "url": "/dashboard",
+                                "iconClass": "../icons/apple.svg",
+                                "iconBgColor": "white"
+                            },
+                            {
+                                "id": "analytics",
+                                "name": "Analytics",
+                                "url": "/analytics",
+                                "iconClass": "../icons/google.svg",
+                                "iconBgColor": "black"
+                            },
+                            {
+                                "id": "projects",
+                                "name": "Projects",
+                                "url": "/projects",
+                                "iconClass": "../icons/instagram.svg",
+                                "iconBgColor": "#F59E0B"
+                            },
+                            {
+                                "id": "messages",
+                                "name": "Messages",
+                                "url": "/messages",
+                                "iconClass": "../icons/twitter.svg",
+                                "iconBgColor": "#EC4899"
+                            }
+                           
+                        ]'>
+            </sidebar-app-switcher>
+            <div class="logo">App Switcher with icon Background Color Demo</div>
+        </header>
+
+        <header>
+            <!-- App Switcher -->
+            <sidebar-app-switcher activeAppId="dashboard" headerTitle="Applications" appData='[
+                            {
+                                "id": "dashboard",
+                                "name": "Dashboard",
+                                "url": "/dashboard",
+                                "iconClass": "../icons/apple.svg",
+                                "iconBgColor": "white"
+                            },
+                            {
+                                "id": "analytics",
+                                "name": "Analytics",
+                                "url": "/analytics",
+                                "iconClass": "../icons/google.svg",
+                                "iconBgColor": "black"
+                            },
+                            {
+                                "id": "projects",
+                                "name": "Projects",
+                                "url": "/projects",
+                                "iconClass": "../icons/instagram.svg",
+                                "iconBgColor": "#F59E0B"
+                            },
+                            {
+                                "id": "messages",
+                                "name": "Messages",
+                                "url": "/messages",
+                                "iconClass": "../icons/twitter.svg",
+                                "iconBgColor": "#EC4899"
+                            }
+                           
+                        ]'>
+            </sidebar-app-switcher>
+            <div class="logo">App Switcher with default menu selection Demo</div>
+        </header>
 
     </div>
 </body>
