@@ -1,4 +1,4 @@
-import DOMPurify from "./dom-purify.js";
+import DOMPurify from "../utils/dom-purify.js";
 
 let RadioButtonGroup = null;
 (function () {
