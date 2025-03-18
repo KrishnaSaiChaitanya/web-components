@@ -4,138 +4,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Switcher Component Demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script type="module" src="./components/app-drawer.js"></script>
+    <title>Web Components Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f7;
+            padding: 0;
+            background: #f4f4f4;
         }
 
-        header {
-            display: flex;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .card-link {
+            display: inline-flex;
             align-items: center;
-            background-color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
+            font-size: 1rem;
+            color: #007bff;
+            text-decoration: none;
         }
 
-        .logo {
-            margin-left: 16px;
-            font-size: 18px;
-            font-weight: 600;
+        .card-link .ri-arrow-right-line {
+            margin-left: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .card-link:hover .ri-arrow-right-line {
+            transform: translateX(5px);
         }
     </style>
 </head>
 
 <body>
-    <div class="demo-container">
-
-        <header>
-            <sidebar-app-switcher headerTitle="Applications" appData='[
-                        {
-                            "id": "dashboard",
-                            "name": "Dashboard",
-                            "url": "/dashboard",
-                            "iconClass": "../icons/facebook.svg"
-                        },
-                        {
-                            "id": "analytics",
-                            "name": "Analytics",
-                            "url": "/analytics",
-                            "iconClass": "../icons/apple.svg"
-                        },
-                        {
-                            "id": "projects",
-                            "name": "Projects",
-                            "url": "/projects",
-                            "iconClass": "../icons/google.svg"
-                        }
-                        
-                    ]'>
-            </sidebar-app-switcher>
-            <div class="logo">App Switcher Demo</div>
-        </header>
-
-        <header>
-            <sidebar-app-switcher headerTitle="Applications" appData='[
-                            {
-                                "id": "dashboard",
-                                "name": "Dashboard",
-                                "url": "/dashboard",
-                                "iconClass": "../icons/apple.svg",
-                                "iconBgColor": "white"
-                            },
-                            {
-                                "id": "analytics",
-                                "name": "Analytics",
-                                "url": "/analytics",
-                                "iconClass": "../icons/google.svg",
-                                "iconBgColor": "black"
-                            },
-                            {
-                                "id": "projects",
-                                "name": "Projects",
-                                "url": "/projects",
-                                "iconClass": "../icons/instagram.svg",
-                                "iconBgColor": "#F59E0B"
-                            },
-                            {
-                                "id": "messages",
-                                "name": "Messages",
-                                "url": "/messages",
-                                "iconClass": "../icons/twitter.svg",
-                                "iconBgColor": "#EC4899"
-                            }
-                           
-                        ]'>
-            </sidebar-app-switcher>
-            <div class="logo">App Switcher with icon Background Color Demo</div>
-        </header>
-
-        <header>
-            <sidebar-app-switcher activeAppId="dashboard" headerTitle="Applications" appData='[
-                            {
-                                "id": "dashboard",
-                                "name": "Dashboard",
-                                "url": "/dashboard",
-                                "iconClass": "../icons/apple.svg",
-                                "iconBgColor": "white"
-                            },
-                            {
-                                "id": "analytics",
-                                "name": "Analytics",
-                                "url": "/analytics",
-                                "iconClass": "../icons/google.svg",
-                                "iconBgColor": "black"
-                            },
-                            {
-                                "id": "projects",
-                                "name": "Projects",
-                                "url": "/projects",
-                                "iconClass": "../icons/instagram.svg",
-                                "iconBgColor": "#F59E0B"
-                            },
-                            {
-                                "id": "messages",
-                                "name": "Messages",
-                                "url": "/messages",
-                                "iconClass": "../icons/twitter.svg",
-                                "iconBgColor": "#EC4899"
-                            }
-                           
-                        ]'>
-            </sidebar-app-switcher>
-            <div class="logo">App Switcher with default menu selection Demo</div>
-        </header>
-
+    <div class="container">
+        <div class="header">
+            <h1>Web Components</h1>
+        </div>
+        <div class="cards" id="cards-container"></div>
     </div>
-
+    <script>
+        const components = [
+            { name: 'Radio Group', url: '/components/radio-group' },
+            { name: 'App Drawer', url: '/components/app-drawer' }
+        ];
+        const container = document.getElementById('cards-container');
+        components.forEach(component => {
+            const card = document.createElement('a');
+            card.href = component.url;
+            card.className = 'card';
+            card.innerHTML = `
+    <div class="card-content">
+      <div class="card-title">${component.name}</div>
+      <div class="card-link">Explore <i class="ri-arrow-right-line"></i></div>
+    </div>
+  `;
+            container.appendChild(card);
+        });
+    </script>
 </body>
 
 </html>

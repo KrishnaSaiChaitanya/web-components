@@ -3,7 +3,6 @@ let SidebarAppSwitcher = null;
 (function () {
     let sidebarAppSwitcherTemplate = document.createElement("template");
     sidebarAppSwitcherTemplate.innerHTML = `
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -170,7 +169,7 @@ let SidebarAppSwitcher = null;
         }
         
         .grid-icon {
-            background-image: url('../icons/grid-icon.svg');
+            background-image: url('./icons/grid-icon.svg');
             height: 32px;
             width: 32px;
         }
@@ -200,78 +199,78 @@ let SidebarAppSwitcher = null;
         </div>
     </div>
     `;
-    
+
     class SidebarAppSwitcher extends HTMLElement {
         constructor() {
             super();
             this.attachShadow({ mode: "open" });
             this.shadowRoot.appendChild(sidebarAppSwitcherTemplate.content.cloneNode(true));
-        
+
             this.appData = JSON.parse(this.getAttribute("appData") || "[]");
             this.activeAppId = this.getAttribute('activeAppId') || null;
             this.headerTitle = this.getAttribute('headerTitle') || 'Applications';
-            
-            
+
+
             this.button = this.shadowRoot.querySelector('.sidebar-switcher-button');
             this.panel = this.shadowRoot.querySelector('.sidebar-panel');
             this.backdrop = this.shadowRoot.querySelector('.backdrop');
             this.closeButton = this.shadowRoot.querySelector('.close-button');
             this.appsList = this.shadowRoot.querySelector('.apps-list');
             this.panelHeader = this.shadowRoot.querySelector('#sidebar-title');
-            
-           
+
+
             this.openPanel = this.openPanel.bind(this);
             this.closePanel = this.closePanel.bind(this);
             this.handleKeyDown = this.handleKeyDown.bind(this);
             this.handleBackdropClick = this.handleBackdropClick.bind(this);
-            
-            
+
+
             this.focusableElements = [];
         }
-        
+
         connectedCallback() {
-            
+
             this.panelHeader.textContent = this.headerTitle;
-            
-            
+
+
             this.renderApps();
-            
-            
+
+
             this.button.addEventListener('click', this.openPanel);
             this.closeButton.addEventListener('click', this.closePanel);
             this.backdrop.addEventListener('click', this.handleBackdropClick);
             document.addEventListener('keydown', this.handleKeyDown);
-            
-            
+
+
             this.panel.addEventListener('touchmove', (e) => {
                 e.stopPropagation();
             }, { passive: true });
         }
-        
+
         disconnectedCallback() {
-            
+
             this.button.removeEventListener('click', this.openPanel);
             this.closeButton.removeEventListener('click', this.closePanel);
             this.backdrop.removeEventListener('click', this.handleBackdropClick);
             document.removeEventListener('keydown', this.handleKeyDown);
         }
-        
+
         openPanel() {
             this.panel.classList.add('open');
             this.backdrop.classList.add('open');
-            
-            
+
+
             document.body.style.overflow = 'hidden';
             this.updateFocusableElements();
-            
-            
+
+
             if (this.focusableElements.length > 0) {
                 this.focusableElements[0].focus();
             }
-            
+
             this.dispatchEvent(new CustomEvent('panelOpened'));
         }
-        
+
         closePanel() {
             this.panel.classList.remove('open');
             this.backdrop.classList.remove('open');
@@ -279,22 +278,22 @@ let SidebarAppSwitcher = null;
             this.button.focus();
             this.dispatchEvent(new CustomEvent('panelClosed'));
         }
-        
+
         handleKeyDown(event) {
             if (!this.panel.classList.contains('open')) return;
-            
+
             if (event.key === 'Escape') {
                 event.preventDefault();
                 this.closePanel();
                 return;
             }
-            
+
             if (event.key === 'Tab') {
                 if (this.focusableElements.length === 0) return;
-                
+
                 const firstElement = this.focusableElements[0];
                 const lastElement = this.focusableElements[this.focusableElements.length - 1];
-                
+
                 if (event.shiftKey && document.activeElement === firstElement) {
                     event.preventDefault();
                     lastElement.focus();
@@ -304,26 +303,26 @@ let SidebarAppSwitcher = null;
                 }
             }
         }
-        
+
         handleBackdropClick() {
             this.closePanel();
         }
-        
+
         updateFocusableElements() {
             this.focusableElements = Array.from(
                 this.shadowRoot.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
             ).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
         }
-        
+
         renderApps() {
             this.appsList.innerHTML = '';
-            
+
             this.appData.forEach(app => {
                 const appElement = document.createElement('a');
                 appElement.href = app.url || '#';
                 appElement.className = 'app-item';
                 appElement.setAttribute('tabindex', '0');
-                
+
                 if (app.id === this.activeAppId) {
                     appElement.classList.add('active');
                     appElement.setAttribute('aria-current', 'page');
@@ -331,11 +330,11 @@ let SidebarAppSwitcher = null;
                         e.preventDefault();
                     });
                 }
-                
+
                 const iconElement = document.createElement('div');
                 iconElement.className = 'app-icon';
                 iconElement.style.backgroundColor = app?.iconBgColor || 'white';
-                
+
                 const iconInner = document.createElement('img');
                 iconInner.src = app.iconClass;
                 iconInner.style.width = '32px';
@@ -344,22 +343,19 @@ let SidebarAppSwitcher = null;
                 const nameElement = document.createElement('span');
                 nameElement.className = 'app-name';
                 nameElement.textContent = app.name;
-                
-                // Append elements
                 appElement.appendChild(iconElement);
                 appElement.appendChild(nameElement);
-                
-                
+
+
                 if (app.id !== this.activeAppId) {
                     appElement.addEventListener('click', (e) => {
-                       
+
                         if (app.url && app.url !== '#') {
                             window.location.href = app.url;
                         }
-                        
+
                         this.closePanel();
-                        
-                        
+
                         this.dispatchEvent(new CustomEvent('appSelected', {
                             detail: {
                                 appId: app.id,
@@ -369,15 +365,15 @@ let SidebarAppSwitcher = null;
                         }));
                     });
                 }
-                
+
                 this.appsList.appendChild(appElement);
             });
         }
-        
+
         static get observedAttributes() {
             return ['appdata', 'activeappid', 'headertitle'];
         }
-        
+
         attributeChangedCallback(name, oldValue, newValue) {
             if (name === 'appdata' && oldValue !== newValue) {
                 try {
@@ -387,25 +383,24 @@ let SidebarAppSwitcher = null;
                     console.error('Invalid app data format:', e);
                 }
             }
-            
+
             if (name === 'activeappid' && oldValue !== newValue) {
                 this.activeAppId = newValue;
                 this.renderApps();
             }
-            
+
             if (name === 'headertitle' && oldValue !== newValue) {
                 this.headerTitle = newValue;
                 this.panelHeader.textContent = this.headerTitle;
             }
         }
     }
-    
-    // customElements.define("sidebar-app-switcher", SidebarAppSwitcher);
+
     if (!customElements.get("sidebar-app-switcher")) {
-  customElements.define("sidebar-app-switcher", SidebarAppSwitcher);
-}
+        customElements.define("sidebar-app-switcher", SidebarAppSwitcher);
+    }
     SidebarAppSwitcher = SidebarAppSwitcher;
-    
+
 })();
 
 export { SidebarAppSwitcher };

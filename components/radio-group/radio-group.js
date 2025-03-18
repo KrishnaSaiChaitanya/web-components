@@ -1,11 +1,10 @@
-import DOMPurify from "../utils/dom-purify.js";
+import DOMPurify from "../../utils/dom-purify.js";
 
 let RadioButtonGroup = null;
 (function () {
-  console.log("jhjgfgch");
   let RadioTemplate = document.createElement('template');
   RadioTemplate.innerHTML = `
-  <link rel="stylesheet" href="../css/colour.css">
+  <link rel="stylesheet" href="../../css/colour.css">
   <style>
     .disabled {
       pointer-events: none;
@@ -174,10 +173,8 @@ let RadioButtonGroup = null;
         const jsonData = DOMPurify.sanitize(data);
         let result = jsonData.replace(/([a-zA-Z0-9]+?):/g, '"$1":');
         result = result.replace(/'/g, '"');
-        console.log(data, "this is data");
         return JSON.parse(result);
       } catch (err) {
-        console.log("error", err);
         return [];
       }
     }
