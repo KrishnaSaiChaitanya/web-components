@@ -29,12 +29,23 @@
             top: 10%;
         }
 
+        .component-container fieldset,
+        .new-component-container fieldset {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 90%;
+        }
+
         .component-container,
         .new-component-container {
             display: flex;
+            width: 80%;
             justify-content: center;
             flex-direction: column;
-            padding: 50px;
+            padding-left: 60px;
+            padding-top: 30px;
             border: 1px solid lightgray;
         }
 
@@ -80,7 +91,7 @@
         <div class="component-container">
 
             <fieldset>
-                <legend></legend>
+
                 <h2 class="heading display-x-small">Radio Button</h2>
                 <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
                     radioData="[{label: 'Default', value: 'default'},{label: 'Selected', value: 'selected', checked: true}]">
@@ -92,7 +103,7 @@
             </fieldset>
 
             <fieldset>
-                <legend></legend>
+
                 <h2>Radio Button with Row direction</h2>
                 <agno-radio-button-group groupName="radio_group" direction="row" handler="handleRadioChange"
                     radioData="[{label: 'Test', value: 'test'},{label: 'Test-1', value: 'test1', checked: true}, {label: 'Test-2', value: 'test2', disabled: true}, {label: 'Test-3', value: 'test3', checked: true, disabled: true}]">
@@ -100,7 +111,7 @@
             </fieldset>
 
             <fieldset>
-                <legend></legend>
+
                 <h2>Radio button group - required with a title</h2>
                 <agno-radio-button-group groupName="required_group" required="true" handler="handleRadioChange"
                     requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
@@ -109,7 +120,7 @@
             </fieldset>
 
             <fieldset>
-                <legend></legend>
+
                 <h2>Radio button group - required with a title - error state</h2>
                 <agno-radio-button-group groupName="error_group" required="true" handler="handleRadioChange"
                     requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
