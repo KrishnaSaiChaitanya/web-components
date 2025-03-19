@@ -7,17 +7,21 @@
         html,
         body {
             font-family: "Inter", sans-serif;
-            height: 100%;
+            min-height: 100vh;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            background-color: #f8f9fa;
+            overflow-y: auto;
         }
 
         .title {
-            font-size: 30px;
+            font-size: 32px;
             font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .main-container {
@@ -25,32 +29,80 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: absolute;
-            top: 10%;
-        }
-
-        .component-container fieldset,
-        .new-component-container fieldset {
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 90%;
+            margin-top: 40px;
+            width: 100%;
         }
 
         .component-container,
         .new-component-container {
+            width: 50%;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             display: flex;
-            width: 80%;
-            justify-content: center;
             flex-direction: column;
-            padding-left: 60px;
-            padding-top: 30px;
+            justify-content: center;
             border: 1px solid lightgray;
         }
 
-        .hidden {
-            display: none;
+        fieldset {
+            border: none;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        legend {
+            font-size: 20px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .field-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
 
         .theme-selector {
@@ -60,6 +112,11 @@
             border: 1px solid gray;
             border-radius: 5px;
             cursor: pointer;
+            background: white;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
     <script>
@@ -89,9 +146,40 @@
         </select>
         <br />
         <div class="component-container">
-
             <fieldset>
+                <legend>User Information</legend>
+                <form id="formId" action="" onsubmit="formSubmit">
+                    <div class="field-container">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" />
+                    </div>
 
+                    <div class="field-container">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" />
+                    </div>
+
+                    <div class="field-container">
+                        <label>Age</label>
+                        <agno-radio-button-group id="age" name="age" groupName="age" direction="column"
+                            radioData="[{label: '0 - 30', value: '30'},{label: '31 - 60', value: '60'},{label: '61 - 100', value: '100'}]">
+                        </agno-radio-button-group>
+                    </div>
+
+                    <div class="field-container">
+                        <label>Technology</label>
+                        <agno-radio-button-group id="css" name="css" groupName="css"
+                            radioData="[{label: 'Css', value: 'css'}]"></agno-radio-button-group>
+                        <agno-radio-button-group id="javascript" name="javascript" groupName="javascript"
+                            radioData="[{label: 'Javascript', value: 'javascript'}]"></agno-radio-button-group>
+                    </div>
+
+                    <div class="field-container">
+                        <button id="button" type="submit">Submit</button>
+                    </div>
+                </form>
+            </fieldset>
+            <fieldset>
                 <h2 class="heading display-x-small">Radio Button</h2>
                 <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
                     radioData="[{label: 'Default', value: 'default'},{label: 'Selected', value: 'selected', checked: true}]">
@@ -103,7 +191,6 @@
             </fieldset>
 
             <fieldset>
-
                 <h2>Radio Button with Row direction</h2>
                 <agno-radio-button-group groupName="radio_group" direction="row" handler="handleRadioChange"
                     radioData="[{label: 'Test', value: 'test'},{label: 'Test-1', value: 'test1', checked: true}, {label: 'Test-2', value: 'test2', disabled: true}, {label: 'Test-3', value: 'test3', checked: true, disabled: true}]">
@@ -111,7 +198,6 @@
             </fieldset>
 
             <fieldset>
-
                 <h2>Radio button group - required with a title</h2>
                 <agno-radio-button-group groupName="required_group" required="true" handler="handleRadioChange"
                     requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
@@ -120,7 +206,6 @@
             </fieldset>
 
             <fieldset>
-
                 <h2>Radio button group - required with a title - error state</h2>
                 <agno-radio-button-group groupName="error_group" required="true" handler="handleRadioChange"
                     requiredText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?"
@@ -128,18 +213,13 @@
                     radioData="[{label: 'orem ipsum ', value: 'default'}, {label: 'Selected', value: 'selected', checked:true}]">
                 </agno-radio-button-group>
             </fieldset>
-
-
-
-
         </div>
-
 
         <div class="new-component-container hidden">
             <fieldset>
                 <h2>Radio button group - with Multi Line</h2>
                 <agno-radio-button-group groupName="radio_group" handler="handleRadioChange"
-                    radioData='[{"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?", "value": "default", "multiLine": true, theme:"theme2"}, {"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis","multiLine": true, "value": "selected", "checked": true,theme:"theme2"}, {"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis", "value": "selected", "checked": false, "multiLine": true, theme:"theme2"}]'>
+                    radioData='[{"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus sagittis purus, ac sagittis augue tempus eu?", "value": "default", "multiLine": true, theme:"theme2"}, {"label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "multiLine": true, "value": "selected", "checked": true,theme:"theme2"}]'>
                 </agno-radio-button-group>
             </fieldset>
             <fieldset>
@@ -152,7 +232,7 @@
             <fieldset>
                 <h2 class="heading display-x-small">Radio Button with Hover</h2>
                 <agno-radio-button-group groupName="radio_group" direction="column" handler="handleRadioChange"
-                    radioData="[{label: 'Default', value: 'default', theme: 'theme2', hover: true},{label: 'Selected', value: 'selected', checked: true, theme: 'theme2',hover: true}]">
+                    radioData="[{label: 'Default', value: 'default', theme: 'theme2', hover: true},{label: 'Selected', value: 'selected', checked: true, theme: 'theme2', hover: true}]">
                 </agno-radio-button-group>
             </fieldset>
         </div>

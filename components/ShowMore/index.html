@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Show More Component</title>
+  <style>
+    html,
+    body {
+      font-family: "Inter", sans-serif;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      width: 80%;
+      max-width: 800px;
+    }
+    .dark-bg {
+      background-color: black;
+      color: #fff;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      padding: 20px;
+      align-items: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    .showmore-container {
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <script type="module" src="show-more.js"></script>
+  <div class="main-container">
+    <p class="title">Agno Show More Component</p>
+    <div class="container">
+      <div class="showmore-container">
+        <h2>Show More - Minimal</h2>
+        <agno-show-more>
+          <span slot="summary">This is your summary content...</span>
+          <span slot="content">Lorem ipsum dolor amet</span>
+        </agno-show-more>
+      </div>
+      <div class="showmore-container">
+        <h2>Show More - Button</h2>
+        <agno-show-more display-button="true">
+          <span slot="summary">This is your summary content...</span>
+          <span slot="content">Lorem ipsum dolor amet</span>
+        </agno-show-more>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
