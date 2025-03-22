@@ -1,0 +1,1 @@
+global.customElements = window.customElements;

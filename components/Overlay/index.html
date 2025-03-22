@@ -1,0 +1,136 @@
+<html lang="en">
+
+<head>
+    <title>Overlay Component</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #F4F2ED;
+        }
+
+        .title {
+            font-size: larger;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 900px;
+            height: 90%;
+            display: contents;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module" src="overlay.js"></script>
+    <div class="container">
+        <h1 class="title">Agno Overlay Component</h1><br>
+        <h2>Default</h2>
+        <agno-overlay id="default_overlay">
+            <div class="modal__content">
+                <h2 id="overlay-one-title">Default Overlay Heading</h2>
+                <div class="modal__content-inner">
+                    <p>Lorem ipsum dolor sit amet, <a href="#!">consectetur adipiscing elit</a>.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <div class="video__contain">
+                        <iframe width="600" height="345" src="https://www.youtube.com/embed/t82XRda5DnY?rel=0"
+                            title="Introducing Overlay" allowfullscreen=""></iframe>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="#!">Phasellus interdur
+                            lorem</a> in
+                        metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum <a href="#!">dolor sit</a> amet, consectetur adipiscing elit.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdu
+                        lorem in metus suscipit, ut ullamcorper velit condimentum. Phasellus interdum
+                        <a href="#!">sit lorem</a>in metus suscipit, ut ullamcorper velit condimentum.
+                    </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                </div>
+            </div>
+
+        </agno-overlay>
+        <button id="open_default_overlay">Default Overlay</button>
+
+        <h2>Small</h2>
+        <agno-overlay id="small_overlay" type="small">
+            <div class="modal__content">
+                <h2 id="overlay-one-title">Default Overlay Heading</h2>
+                <div class="modal__content-inner">
+                    <p>Lorem ipsum dolor sit amet, <a href="#!">consectetur adipiscing elit</a>.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="#!">Phasellus interdur
+                            lorem</a> in
+                        metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum <a href="#!">dolor sit</a> amet, consectetur adipiscing elit.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdu
+                        lorem in metus suscipit, ut ullamcorper velit condimentum. Phasellus interdum
+                        <a href="#!">sit lorem</a>in metus suscipit, ut ullamcorper velit condimentum.
+                    </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                </div>
+            </div>
+
+        </agno-overlay>
+        <button id="open_small_overlay">Small Overlay</button>
+
+        <h2>Large</h2>
+        <agno-overlay id="large_overlay" type="large">
+            <div class="modal__content">
+                <h2 id="overlay-one-title">Default Overlay Heading</h2>
+                <div class="modal__content-inner">
+                    <p>Lorem ipsum dolor sit amet, <a href="#!">consectetur adipiscing elit</a>.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="#!">Phasellus interdur
+                            lorem</a> in
+                        metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum <a href="#!">dolor sit</a> amet, consectetur adipiscing elit.
+                        Phasellus interdu lorem in metus suscipit, ut ullamcorper velit condimentum.
+                        Phasellus interdum sit lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdu
+                        lorem in metus suscipit, ut ullamcorper velit condimentum. Phasellus interdum
+                        <a href="#!">sit lorem</a>in metus suscipit, ut ullamcorper velit condimentum.
+                    </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdur
+                        lorem in metus suscipit, ut ullamcorper velit condimentum.</p>
+                </div>
+            </div>
+
+        </agno-overlay>
+        <button id="open_large_overlay">Large Overlay</button>
+    </div>
+    <script>
+        document.getElementById("open_default_overlay").addEventListener('click', function () {
+            document.getElementById('default_overlay').show()
+        })
+        document.getElementById("open_small_overlay").addEventListener('click', function () {
+            document.getElementById('small_overlay').show()
+        })
+        document.getElementById("open_large_overlay").addEventListener('click', function () {
+            document.getElementById('large_overlay').show()
+        })
+    </script>
+</body>
+
+</html>

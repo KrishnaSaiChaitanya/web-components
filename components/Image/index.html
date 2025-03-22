@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>Image Component</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .component-container {
+            width: 400px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 50px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module" src="./image.js"></script>
+    <p class="title">Agno Image Component</p>
+    <br />
+    <div class="component-container">
+        <agno-image src="./image.jpeg" alt="Image"></agno-image>
+    </div>
+</body>
+
+</html>

@@ -1,17 +1,19 @@
-import { TestHarness } from "element-test-harness";
-import { html } from "lit";
-import { ShowMore } from "../../../src/components/show-more/show-more.js";
+import { fixture, html } from '@open-wc/testing-helpers';
 
-export class ShowMoreHarness extends TestHarness {
-  static newShowMoreComponent(data) {
-    return this.fixture(html`<agno-show-more
-      display-button="${data.displayButton}"
+export class ShowMoreHarness {
+  static async newShowMoreComponent(data) {
+    const element = await fixture(html`<agno-show-more
+      display-button="${data.displayButton || 'false'}"
     >
-      <span slot="summary">${data.summary}</span>
-      <span slot="content" class="content" style="display:none;"
-        >${data.content}</span
-      >
+      <span slot="summary">${data.summary || ''}</span>
+      <span slot="content" class="content">${data.content || ''}</span>
     </agno-show-more>`);
+    
+    return new ShowMoreHarness(element);
+  }
+
+  constructor(element) {
+    this.element = element;
   }
 
   qs(selector) {
@@ -19,37 +21,35 @@ export class ShowMoreHarness extends TestHarness {
   }
 
   get summaryText() {
-    return this.qs(".summary").textContent.trim();
+    const slot = this.qs('slot[name="summary"]');
+    const assigned = slot.assignedNodes();
+    return assigned.length ? assigned[0].textContent.trim() : '';
   }
 
   get contentText() {
-    const slot = this.qs("slot[name='content']");
-    const assigned = slot
-      .assignedNodes()
-      .map((node) => node.textContent)
-      .join("")
-      .trim();
-    return assigned ? assigned.textContent.trim() : "";
+    const slot = this.qs('slot[name="content"]');
+    const assigned = slot.assignedNodes();
+    return assigned.length ? assigned[0].textContent.trim() : '';
   }
 
   get isContentHidden() {
-    const content = this.qs(".content-hidden");
-    return content ? content.classList.contains("content-hidden") : false;
+    return this.qs('#content').classList.contains('content-hidden');
   }
 
   get buttonText() {
-    return this.qs(".show-more-text").textContent.trim() || "";
+    return this.qs('.show-more-text').textContent.trim();
   }
 
   get buttonAriaExpanded() {
-    return this.qs("button").getAttribute("aria-expanded");
+    return this.qs('button').getAttribute('aria-expanded');
   }
 
   async toggleContent() {
-    this.getButton().click();
+    this.qs('button').click();
+    return new Promise(resolve => setTimeout(resolve, 10)); // Small delay for any animations
   }
 
   getButton() {
-    return this.qs("button");
+    return this.qs('button');
   }
 }

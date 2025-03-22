@@ -4,6 +4,7 @@ let Quantity = null;
   QuantityComponentTemplate.innerHTML = `
   <link rel="stylesheet" href="../../assets/css/global.css">
   <link rel="stylesheet" href="../../assets/css/color.css">
+
   <style>
   .btn {
     position: relative;
@@ -192,6 +193,7 @@ let Quantity = null;
   }
   
   </style>
+
   <div id="quantity__buttons" class="quantity__buttons">
   <button id="decrement" class="btn btn__primary btn__rounded qtyminus btn__disabled" aria-label="decrease" aria-disabled="true">
     <span class="icon icon_lsg icon__minus-v2">
@@ -217,17 +219,17 @@ let Quantity = null;
     `;
 
   class Quantity extends HTMLElement {
-    static formAssociated = true;
     constructor() {
       super();
-      this._internals = this.attachInternals();
+      // Remove the attachInternals call that's causing the error
+      // this._internals = this.attachInternals();
       const template = QuantityComponentTemplate;
-      this.shadowroot = this.attachShadow({ mode: "open" });
-      this.shadowroot.appendChild(template.content.cloneNode(true));
-      this.buttonContainer = this.shadowroot.getElementById("quantity__buttons");
-      this.decrementButton = this.shadowroot.getElementById("decrement");
-      this.incrementButton = this.shadowroot.getElementById("increment");
-      this.quantityInput = this.shadowroot.getElementById("quantity-counter");
+      this.shadowDOM = this.attachShadow({ mode: "open" });
+      this.shadowDOM.appendChild(template.content.cloneNode(true));
+      this.buttonContainer = this.shadowDOM.getElementById("quantity__buttons");
+      this.decrementButton = this.shadowDOM.getElementById("decrement");
+      this.incrementButton = this.shadowDOM.getElementById("increment");
+      this.quantityInput = this.shadowDOM.getElementById("quantity-counter");
       this.handleIncrement = this.handleIncrement.bind(this);
       this.handleDecrement = this.handleDecrement.bind(this);
     }
@@ -274,7 +276,10 @@ let Quantity = null;
       this.decrementButton.addEventListener("click", this.handleDecrement);
     }
   }
-  customElements.define("agno-quantity", Quantity);
+  
+  if (!customElements.get('agno-quantity')) {
+    customElements.define("agno-quantity", Quantity);
+  }
   Quantity = Quantity;
 })();
 
