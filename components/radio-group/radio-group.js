@@ -65,15 +65,20 @@ let RadioButtonGroup = null;
       width: 24px;
       height: 24px;
       top: -0.2em;
-      margin-right: 1em;
+      margin-right: 0.6em;
       vertical-align: top;
       cursor: pointer;
       text-align: center;
+      margin-top: auto;
+      margin-bottom: auto;
       transition: all 250ms ease;
     }
     input[type="radio"]:checked + .radio__label:before {
       background-color: var(--palette-brand-charcoal);
       box-shadow: inset 0 0 0 4px var(--palette-brand-neutral);
+    }
+    .radio__label{
+     line-height: 2;
     }
     input[type="radio"]:checked + .radio__label[data-theme="theme2"]:before {
       background-color: var(--palette-feedback-info);
@@ -152,14 +157,15 @@ let RadioButtonGroup = null;
     <div id="radio_group_container" class="radio_group_container" role="radiogroup" tabindex="0"></div>
   </div>
   `;
+
+
   class Radio extends HTMLElement {
     static formAssociated = true;
     constructor() {
       super();
       this._internals = this.attachInternals();
-      const template = RadioTemplate;
       this.shadowroot = this.attachShadow({ mode: 'open' });
-      this.shadowroot.appendChild(template.content.cloneNode(true));
+      this.shadowroot.appendChild(RadioTemplate.content.cloneNode(true));
       this.container = this.shadowroot.getElementById('radio__container');
       this.radioContainer = this.shadowroot.getElementById('radio_group_container');
       this.requiredContainer = this.shadowroot.getElementById('required');
@@ -168,6 +174,7 @@ let RadioButtonGroup = null;
       this.errorText = this.shadowroot.getElementById('errorText');
       this.onCheckbox = this.onCheckbox.bind(this);
     }
+    
     parseJsonData(data) {
       try {
         const jsonData = DOMPurify.sanitize(data);
@@ -178,23 +185,29 @@ let RadioButtonGroup = null;
         return [];
       }
     }
+    
     get form() {
       return this._internals.form;
     }
+    
     get name() {
       return this.getAttribute('name');
     }
+    
     get handler() {
       return this.getAttribute('handler');
     }
+    
     set handler(value) {
       return this.setAttribute('handler', value);
     }
+    
     defaultHandler() {
       return null;
     }
+    
     onCheckbox(e, id) {
-      const input = this.shadowRoot.querySelectorAll('input[type="radio"]');
+      const input = this.shadowroot.querySelectorAll('input[type="radio"]');
       this._internals.setFormValue(e.target.value);
       input.forEach(item => {
         if (item.id === id) {
@@ -210,6 +223,7 @@ let RadioButtonGroup = null;
       let handler = this.handler && typeof window[this.handler] === 'function' ? window[this.handler] : this.defaultHandler;
       handler(e);
     }
+    
     createInputElement(inputProps) {
       const { id, labelId, group, value, error = '', disabled = false, checked = false } = inputProps;
       const input = document.createElement('input');
@@ -223,6 +237,8 @@ let RadioButtonGroup = null;
       if (checked) {
         input.setAttribute('tabindex', 0);
         input.setAttribute('checked', checked);
+      } else {
+        input.setAttribute('tabindex', -1);
       }
       if (disabled) {
         input.setAttribute('disabled', true);
@@ -236,6 +252,7 @@ let RadioButtonGroup = null;
       input.addEventListener('change', e => this.onCheckbox(e, id));
       return input;
     }
+    
     createLabelElement(id, labelId, text, theme) {
       const label = document.createElement('label');
       label.setAttribute('for', id);
@@ -249,51 +266,52 @@ let RadioButtonGroup = null;
       }
       return label;
     }
+    
     connectedCallback() {
-      const radio = this.getAttribute('radioData') || [];
+      const radio = this.getAttribute('radioData') || '[]';
       const direction = this.getAttribute('direction') || 'column';
       const group = this.getAttribute('groupName') || 'radio_group';
       const groupDisabled = this.getAttribute('groupDisabled') || false;
       const required = this.getAttribute('required') || '';
       const requiredText = this.getAttribute('requiredText') || '';
       const error = this.getAttribute('error') || '';
-      if (radio) {
-        let data = radio;
-        data = this.parseJsonData(data);
-        if (data) {
-          data.forEach((item, index) => {
-            const id = `${group}_${index}`;
-            const { label, value, disabled = false, checked = false, multiLine = false, hover = false, theme } = item;
-            const labelId = `label_${id}`;
-            const inputProps = {
-              id,
-              labelId,
-              group,
-              value,
-              disabled,
-              checked,
-              error,
-            };
-            const inputElement = this.createInputElement(inputProps);
-            const labelElement = this.createLabelElement(id, labelId, label, theme);
-            if(multiLine){
-              labelElement.classList.add("multi-line");
-            }
-            const div = document.createElement('div');
-            div.setAttribute('class', 'btn__radio');
-            if(hover){
-              div.classList.add("hover");
-            }
-            div.setAttribute('tabindex', '-1');
-            div.appendChild(inputElement);
-            div.appendChild(labelElement);
-            this.radioContainer.appendChild(div);
-          });
-        }
+      
+      let data = this.parseJsonData(radio);
+      if (data && data.length > 0) {
+        data.forEach((item, index) => {
+          const id = `${group}_${index}`;
+          const { label, value, disabled = false, checked = false, multiLine = false, hover = false, theme } = item;
+          const labelId = `label_${id}`;
+          const inputProps = {
+            id,
+            labelId,
+            group,
+            value,
+            disabled,
+            checked,
+            error,
+          };
+          const inputElement = this.createInputElement(inputProps);
+          const labelElement = this.createLabelElement(id, labelId, label, theme);
+          if(multiLine){
+            labelElement.classList.add("multi-line");
+          }
+          const div = document.createElement('div');
+          div.setAttribute('class', 'btn__radio');
+          if(hover){
+            div.classList.add("hover");
+          }
+          div.setAttribute('tabindex', '-1');
+          div.appendChild(inputElement);
+          div.appendChild(labelElement);
+          this.radioContainer.appendChild(div);
+        });
       }
-      if (groupDisabled) {
+      
+      if (groupDisabled === 'true' || groupDisabled === true) {
         this.radioContainer.classList.add('disabled');
       }
+      
       if (required || requiredText) {
         this.requiredContainer.classList.remove('hide');
         this.requiredContainer.classList.add('show');
@@ -303,6 +321,7 @@ let RadioButtonGroup = null;
         this.requiredText.setAttribute('id', requiredId);
         this.radioContainer.setAttribute('aria-describedby', requiredId);
       }
+      
       if (error) {
         this.errorContainer.classList.remove('hide');
         this.errorContainer.classList.add('show');
@@ -310,15 +329,18 @@ let RadioButtonGroup = null;
         this.errorContainer.setAttribute('aria-live', 'assertive');
         this.errorContainer.setAttribute('aria-atomic', 'true');
       }
+      
       if (direction === 'column') {
         this.radioContainer.classList.add('display_column');
       }
+      
       if (direction === 'row') {
         this.radioContainer.classList.add('display_row');
       }
+      
       this.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') {
-          const focusedRadio = this.shadowRoot.activeElement;
+          const focusedRadio = this.shadowroot.activeElement;
           if (focusedRadio && focusedRadio.tagName === 'INPUT' && focusedRadio.type === 'radio') {
             focusedRadio.checked = true;
             focusedRadio.dispatchEvent(new Event('change'));
@@ -327,7 +349,9 @@ let RadioButtonGroup = null;
       });
     }
   }
+  
   customElements.define('agno-radio-button-group', Radio);
   RadioButtonGroup = Radio;
 })();
+
 export { RadioButtonGroup };
